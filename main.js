@@ -124,9 +124,8 @@
 		element.className = "squareNbr square" + randomNbr;
 		element.innerHTML = "<p>" + randomNbr + "</p>";
 
-		placeSquare(element);
-
 		document.getElementById("allSquaresHover").appendChild(element);
+		placeSquare(element);
 	}
 
 	/* Squares creation */
@@ -384,7 +383,7 @@
 			setTimeout(function()
 			{
 				generateSquares();
-			}, 300);
+			}, 200);
 		}
 	}
 
