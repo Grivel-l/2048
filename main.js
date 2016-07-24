@@ -8,16 +8,33 @@
 	[0, 0, 0, 0]
 	];
 	var moved = 0;
+	
+	var socket;
+	var multiplayer = 0;
 
 	function prepareGame()
 	{
 		createSquares();
 
-		var allSquaresDiv = document.getElementById("allSquares");
-		var allSquaresHover = document.getElementById("allSquaresHover");
+		if (multiplayer == 0)
+		{
+			var allSquaresDiv = document.getElementById("allSquares");
+			var allSquaresHover = document.getElementById("allSquaresHover");
+		}
+
+		else
+		{
+			var allSquaresDiv = document.getElementById("allSquares2");
+			var allSquaresHover = document.getElementById("allSquaresHover2");
+		}
 
 		allSquaresHover.style.marginLeft = parseInt(getComputedStyle(allSquaresHover).getPropertyValue("margin-left").split("px")[0]) - 300 + "px";
 		allSquaresDiv.style.marginLeft = parseInt(getComputedStyle(allSquaresDiv).getPropertyValue("margin-left").split("px")[0]) - 300 + "px";
+
+		if (multiplayer == 0)
+		{
+			addListeners();
+		}
 	}
 
 	function createSquares()
@@ -30,12 +47,17 @@
 			element = document.createElement("div");
 			element.className = "eachSquare";
 
-			document.getElementById("allSquares").appendChild(element);
+			if (multiplayer == 0)
+			{
+				document.getElementById("allSquares").appendChild(element);
+			}
+
+			else
+			{
+				document.getElementById("allSquares2").appendChild(element);
+			}
 			i += 1;
 		}
-
-		generateSquares();
-		generateSquares();
 	}
 
 	/* Squares creation */
@@ -86,28 +108,17 @@
 		element.style.width = "140px";
 		element.style.height = "140px";
 
-		// (function animate(element)
-		// {
-		// 	var elementSize = parseInt(getComputedStyle(element).getPropertyValue("width").split("px")[0]);
-
-		// 	element.style.width = elementSize + 2 + "px";
-		// 	element.style.height = elementSize + 2 + "px";
-		// 	elementSize += 2;
-
-		// 	if (elementSize < 140)
-		// 	{
-		// 		window.setTimeout(function()
-		// 		{
-		// 			animate(element);
-		// 		}, 3);
-		// 	}
-		// })(element);
-
 		squaresPosition[y][x] = element;
 	}
 
 	function generateSquares()
 	{
+		if (multiplayer == 1)
+		{
+			socket.emit("generateSquare")
+			return 0;
+		}
+
 		var randomNbr = Math.floor(Math.random() * (4 - 1)) + 1;
 
 		if (randomNbr == 3)
@@ -356,24 +367,50 @@
 
 	function moveListener(event)
 	{
-		if (event.keyCode == 37)
+		if (multiplayer == 0)
 		{
-			moveLeft();
+			if (event.keyCode == 37)
+			{
+				moveLeft();
+			}
+
+			else if (event.keyCode == 38)
+			{
+				moveUp();
+			}
+
+			else if (event.keyCode == 39)
+			{
+				moveRight();
+			}
+
+			else if (event.keyCode == 40)
+			{
+				moveDown();
+			}
 		}
 
-		else if (event.keyCode == 38)
+		else
 		{
-			moveUp();
-		}
+			if (event.keyCode == 37)
+			{
+				socket.emit("left");
+			}
 
-		else if (event.keyCode == 39)
-		{
-			moveRight();
-		}
+			else if (event.keyCode == 38)
+			{
+				socket.emit("up");
+			}
 
-		else if (event.keyCode == 40)
-		{
-			moveDown();
+			else if (event.keyCode == 39)
+			{
+				socket.emit("right");
+			}
+
+			else if (event.keyCode == 40)
+			{
+				socket.emit("down");
+			}
 		}
 
 		if (moved == 1)
@@ -389,10 +426,77 @@
 
 	/* Move Squares */
 
-	document.addEventListener("DOMContentLoaded", function()
+	/* Multiplayer */
+
+	function multiplayerGame()
 	{
+		multiplayer = 1;
+		socket = io.connect("http://localhost:8181");
+
+		var wrapper = document.getElementById("wrapper");
+
+		wrapper.style.left = "200px";
+		wrapper.style.position = "absolute";
+
+		document.getElementById("allSquares").style.margin = "0px";
+		document.getElementById("allSquaresHover").style.margin = "0px";
+		document.getElementById("wrapper2").style.display = "block";
+
 		prepareGame();
-		document.addEventListener("keydown", moveListener);
-	});
+		generateSquares();
+		generateSquares();
+
+		socket.on("generateSquare", function(randomNbr)
+		{
+			var element = document.createElement("div");
+			element.id = "squareGenerated";
+			element.className = "squareNbr square" + randomNbr;
+			element.innerHTML = "<p>" + randomNbr + "</p>";
+
+			document.getElementById("allSquaresHover").appendChild(element);
+
+			var baseSquareStyle = getComputedStyle(document.getElementsByClassName("eachSquare")[0]);
+			var baseSquareSize = parseInt(baseSquareStyle.getPropertyValue("width").split("px")[0])
+			var baseSquareMargin = parseInt(baseSquareStyle.getPropertyValue("margin-left").split("px")[0]);
+			var nbrOfMargin = [1, 3, 5, 7]
+
+			socket.emit("placeSquare", socket, element, baseSquareStyle, baseSquareSize, baseSquareMargin, nbrOfMargin);
+		});
+
+		socket.on("placeSquare", function(element)
+		{
+			element.id = null;
+			document.getElementById("squareGenerated") = element;
+		});
+	}
+
+	/* Multiplayer */
+
+	function disapearHover()
+	{
+		document.getElementById("gameMenu").style.display = "none";
+	}
+
+	function addListeners()
+	{
+		document.getElementById("menuWrapper").addEventListener("click", function(event)
+		{
+			document.addEventListener("keydown", moveListener);
+			disapearHover();
+
+			if (event.target.id == "classicMode" || event.target.parentElement.id == "classicMode")
+			{
+				generateSquares();
+				generateSquares();
+			}
+
+			else
+			{
+				multiplayerGame();
+			}
+		});
+	}
+
+	document.addEventListener("DOMContentLoaded", prepareGame);
 
 })();

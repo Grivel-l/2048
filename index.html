@@ -2,17 +2,39 @@
 <html>
 <head>
     <title></title>
+    <script src="multiplayer/node_modules/socket.io/node_modules/socket.io-client/socket.io.js"></script>
     <script type="text/javascript" src="main.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 <body>
     <div id="wrapper" class="wrapper">
 
-        <div id="allSquares">
+        <div id="allSquares" class="allSquares">
         </div>
-        <div id="allSquaresHover">
+        <div id="allSquaresHover" class="allSquaresHover">
         </div>
 
+    </div>
+
+    <div id="wrapper2" class="wrapper">
+
+        <div id="allSquares2" class="allSquares">
+        </div>
+        <div id="allSquaresHover2" class="allSquaresHover">
+        </div>
+
+    </div>
+
+    <div id="gameMenu">
+        <div id="menuWrapper">
+            <div class="menuChoice" id="classicMode">
+                <h2>Classic</h2>
+            </div>
+
+            <div class="menuChoice" id="multiplayerMode">
+                <h2>Multiplayer</h2>
+            </div>
+        </div>
     </div>
 
 </body>
