@@ -431,7 +431,7 @@
 	function multiplayerGame()
 	{
 		multiplayer = 1;
-		socket = io.connect("http://localhost:8181");
+		socket = io.connect("http://localhost:8080");
 
 		var wrapper = document.getElementById("wrapper");
 
@@ -446,27 +446,30 @@
 		generateSquares();
 		generateSquares();
 
-		socket.on("generateSquare", function(randomNbr)
+		socket.on("connect", function()
 		{
-			var element = document.createElement("div");
-			element.id = "squareGenerated";
-			element.className = "squareNbr square" + randomNbr;
-			element.innerHTML = "<p>" + randomNbr + "</p>";
+			socket.on("generateClientSquare", function(randomNbr)
+			{
+				var element = document.createElement("div");
+				element.id = "squareGenerated";
+				element.className = "squareNbr square" + randomNbr;
+				element.innerHTML = "<p>" + randomNbr + "</p>";
 
-			document.getElementById("allSquaresHover").appendChild(element);
+				document.getElementById("allSquaresHover").appendChild(element);
 
-			var baseSquareStyle = getComputedStyle(document.getElementsByClassName("eachSquare")[0]);
-			var baseSquareSize = parseInt(baseSquareStyle.getPropertyValue("width").split("px")[0])
-			var baseSquareMargin = parseInt(baseSquareStyle.getPropertyValue("margin-left").split("px")[0]);
-			var nbrOfMargin = [1, 3, 5, 7]
+				var baseSquareStyle = getComputedStyle(document.getElementsByClassName("eachSquare")[0]);
+				var baseSquareSize = parseInt(baseSquareStyle.getPropertyValue("width").split("px")[0])
+				var baseSquareMargin = parseInt(baseSquareStyle.getPropertyValue("margin-left").split("px")[0]);
+				var nbrOfMargin = [1, 3, 5, 7]
 
-			socket.emit("placeSquare", socket, element, baseSquareStyle, baseSquareSize, baseSquareMargin, nbrOfMargin);
-		});
+				socket.emit("placeSquare", {}, element, baseSquareStyle, baseSquareSize, baseSquareMargin, nbrOfMargin);
+			});
 
-		socket.on("placeSquare", function(element)
-		{
-			element.id = null;
-			document.getElementById("squareGenerated") = element;
+			socket.on("placeClientSquare", function(element)
+			{
+				element.id = null;
+				document.getElementById("squareGenerated") = element;
+			});
 		});
 	}
 
@@ -481,18 +484,19 @@
 	{
 		document.getElementById("menuWrapper").addEventListener("click", function(event)
 		{
-			document.addEventListener("keydown", moveListener);
-			disapearHover();
-
 			if (event.target.id == "classicMode" || event.target.parentElement.id == "classicMode")
 			{
+				document.addEventListener("keydown", moveListener);
+				disapearHover();
+
 				generateSquares();
 				generateSquares();
 			}
 
 			else
 			{
-				multiplayerGame();
+				document.getElementById("multiplayerMode").innerHTML = "<h2>Not finished yet !</h2>";
+				// multiplayerGame();
 			}
 		});
 	}
