@@ -208,6 +208,6 @@ html, body
     top: 0px;
     left: 0px;
     background-color: rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
+    border-radius: 10px; 
     margin-left: 50%;
 }
