@@ -252,8 +252,6 @@
 	{
 		var box;
 		var value;
-		
-		var newValue;
 
 		var i = 0;
 		var j = 0;
@@ -303,8 +301,6 @@
 	{
 		var box;
 		var value;
-		
-		var newValue;
 
 		var i = squaresPosition.length - 1;
 		var j = 0;
@@ -547,7 +543,7 @@
 
 				document.getElementById("allSquaresHover").appendChild(element);
 
-				socket.emit("placeSquare", squareNbr);
+				socket.emit("placeSquare", squareNbr, randomNbr, "squareNbr square" + randomNbr, "<p>" + randomNbr + "</p>");
 			});
 
 			socket.on("placeClientSquare", function(squareId, x, y)
@@ -563,6 +559,43 @@
 				element.style.marginTop = (baseSquareSize * y) + nbrOfMargin[y] * baseSquareMargin + "px";
 				element.style.width = "140px";
 				element.style.height = "140px";
+			});
+
+			socket.on("refreshView", function(positions)
+			{
+				var baseSquareStyle = getComputedStyle(document.getElementsByClassName("eachSquare")[0]);
+				var baseSquareSize = parseInt(baseSquareStyle.getPropertyValue("width").split("px")[0])
+				var baseSquareMargin = parseInt(baseSquareStyle.getPropertyValue("margin-left").split("px")[0]);
+				var nbrOfMargin = [1, 3, 5, 7]
+
+				var i = 0;
+				var j = 0;
+				while (positions[i])
+				{
+					j = 0;
+					while (j < positions[i].length)
+					{
+						if (positions[i][j] != 0)
+						{
+							element = document.getElementById(positions[i][j].id);
+
+							if (positions[i][j].deleted == 1)
+							{
+								document.getElementById("allSquaresHover").removeChild(element);
+							}
+
+							else
+							{
+								element.className = positions[i][j].className;
+								element.innerHTML = positions[i][j].innerHTML;
+								element.style.marginLeft = (baseSquareSize * j) + nbrOfMargin[j] * baseSquareMargin + "px";
+								element.style.marginTop = (baseSquareSize * i) + nbrOfMargin[i] * baseSquareMargin + "px";
+							}
+						}
+						j += 1;
+					}
+					i += 1;
+				}
 			});
 		});
 	}
