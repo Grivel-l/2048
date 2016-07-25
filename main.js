@@ -166,8 +166,13 @@
 			setTimeout(function()
 			{
 				placeSquare(element);
-			}, 10);
+			}, 5);
 			return 1;
+		}
+
+		else
+		{
+			squaresPosition[y][x] = 1;
 		}
 
 		var baseSquareStyle = getComputedStyle(document.getElementsByClassName("eachSquare")[0]);
@@ -276,11 +281,11 @@
 						else if (value == squaresPosition[i - 1][j].children[0].innerHTML && squaresPosition[i - 1][j].fusionned == undefined && box.fusionned == undefined)
 						{
 							document.getElementById("allSquaresHover").removeChild(squaresPosition[i][j]);
+							squaresPosition[i][j] = 0;
+
 							squaresPosition[i - 1][j].className = "squareNbr square" + value * 2;
 							squaresPosition[i - 1][j].innerHTML = "<p>" + value * 2 + "</p>";
 							squaresPosition[i - 1][j].fusionned = 1
-
-							squaresPosition[i][j] = 0;
 							moved = 1;
 						}
 					}
@@ -327,11 +332,11 @@
 						else if (value == squaresPosition[i + 1][j].children[0].innerHTML && squaresPosition[i + 1][j].fusionned == undefined && box.fusionned == undefined)
 						{
 							document.getElementById("allSquaresHover").removeChild(squaresPosition[i][j]);
+							squaresPosition[i][j] = 0;
+
 							squaresPosition[i + 1][j].className = "squareNbr square" + value * 2;
 							squaresPosition[i + 1][j].innerHTML = "<p>" + value * 2 + "</p>";
 							squaresPosition[i + 1][j].fusionned = 1
-
-							squaresPosition[i][j] = 0;
 							moved = 1;
 						}
 					}
@@ -374,11 +379,11 @@
 						else if (value == squaresPosition[i][j + 1].children[0].innerHTML && squaresPosition[i][j + 1].fusionned == undefined && box.fusionned == undefined)
 						{
 							document.getElementById("allSquaresHover").removeChild(squaresPosition[i][j]);
+							squaresPosition[i][j] = 0;
+
 							squaresPosition[i][j + 1].className = "squareNbr square" + value * 2;
 							squaresPosition[i][j + 1].innerHTML = "<p>" + value * 2 + "</p>";
 							squaresPosition[i][j + 1].fusionned = 1;
-
-							squaresPosition[i][j] = 0;
 							moved = 1;
 						}
 					}
@@ -421,11 +426,11 @@
 						else if (value == squaresPosition[i][j - 1].children[0].innerHTML && squaresPosition[i][j - 1].fusionned == undefined && box.fusionned == undefined)
 						{
 							document.getElementById("allSquaresHover").removeChild(squaresPosition[i][j]);
+							squaresPosition[i][j] = 0;
+
 							squaresPosition[i][j - 1].className = "squareNbr square" + value * 2;
 							squaresPosition[i][j - 1].innerHTML = "<p>" + value * 2 + "</p>";
 							squaresPosition[i][j - 1].fusionned = 1;
-
-							squaresPosition[i][j] = 0;
 							moved = 1;
 						}
 					}
@@ -566,7 +571,7 @@
 				generateSquares();
 			}
 
-			else
+			else if (event.target.id == "multiplayerMode" || event.target.parentElement.id == "multiplayerMode")
 			{
 				document.getElementById("multiplayerMode").innerHTML = "<h2>Not finished yet !</h2>";
 				// multiplayerGame();
