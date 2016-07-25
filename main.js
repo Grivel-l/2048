@@ -8,6 +8,7 @@
 	[0, 0, 0, 0]
 	];
 	var moved = 0;
+	var moving = 0;
 	var gameOver = 0;
 	
 	var socket;
@@ -166,7 +167,7 @@
 			setTimeout(function()
 			{
 				placeSquare(element);
-			}, 5);
+			}, 1);
 			return 1;
 		}
 
@@ -445,6 +446,17 @@
 
 	function moveListener(event)
 	{
+		if (moving == 1)
+		{
+			return 1;
+		}
+
+		moving = 1;
+		setTimeout(function()
+		{
+			moving = 0;
+		}, 100);
+
 		if (multiplayer == 0)
 		{
 			if (event.keyCode == 37)
