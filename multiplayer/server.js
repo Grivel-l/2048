@@ -19,11 +19,13 @@ io.on("connection", function(socket)
 	[0, 0, 0, 0]
 	];
 
+	var squareNbr = 0;
+
 	socket.squaresPosition = squaresPosition;
 	socket.clientNbr = clients.length;
 	clients.push(socket);
 
-	socket.on("generateSquare", function()
+	function generateSquare()
 	{
 		var randomNbr = Math.floor(Math.random() * (4 - 1)) + 1;
 
@@ -37,10 +39,11 @@ io.on("connection", function(socket)
 			randomNbr = 2;
 		}
 		
-		socket.emit("generateClientSquare", randomNbr);
-	});
+		socket.emit("generateClientSquare", randomNbr, "square" + squareNbr);
+		squareNbr += 1;
+	}
 
-	socket.on("placeSquare", function placeSquare(element, baseSquareStyle, baseSquareSize, baseSquareMargin, nbrOfMargin)
+	function placeSquare(squareId)
 	{
 		var randomPlace = Math.floor(Math.random() * (17 - 0)) + 0;
 
@@ -72,17 +75,16 @@ io.on("connection", function(socket)
 
 		if (socket.squaresPosition[y][x] != 0)
 		{
-			placeSquare(element, baseSquareStyle, baseSquareSize, baseSquareMargin, nbrOfMargin);
+			placeSquare(squareId);
 			return 1;
 		}
 
-		element.style.marginLeft = (baseSquareSize * x) + nbrOfMargin[x] * baseSquareMargin + "px";
-		element.style.marginTop = (baseSquareSize * y) + nbrOfMargin[y] * baseSquareMargin + "px";
-		element.style.width = "140px";
-		element.style.height = "140px";
+		socket.squaresPosition[y][x] = "square" + squareId;
+		socket.emit("placeClientSquare", squareId, x, y);
+	}
 
-		socket.squaresPosition[y][x] = element;
-		socket.emit("placeClientSquare", element);
-	});
+	socket.on("placeSquare", placeSquare);
+	socket.on("generateSquare", generateSquare);
+	// socket.on("left", )
 });
 server.listen(8080);

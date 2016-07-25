@@ -1,0 +1,25 @@
+{
+  "name": "2048multiplayer",
+  "version": "1.0.0",
+  "description": "This is a Node.js server to run a multiplayer mode in 2048",
+  "main": "server.js",
+  "dependencies": {
+    "jsonwebtoken": "^7.1.6",
+    "socket.io": "^1.4.8"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodejs server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Grivel-l/2048.git"
+  },
+  "author": "Grivel-l",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Grivel-l/2048/issues"
+  },
+  "homepage": "https://github.com/Grivel-l/2048#readme"
+}

@@ -538,27 +538,31 @@
 
 		socket.on("connect", function()
 		{
-			socket.on("generateClientSquare", function(randomNbr)
+			socket.on("generateClientSquare", function(randomNbr, squareNbr)
 			{
 				var element = document.createElement("div");
-				element.id = "squareGenerated";
 				element.className = "squareNbr square" + randomNbr;
 				element.innerHTML = "<p>" + randomNbr + "</p>";
+				element.id = squareNbr;
 
 				document.getElementById("allSquaresHover").appendChild(element);
 
+				socket.emit("placeSquare", squareNbr);
+			});
+
+			socket.on("placeClientSquare", function(squareId, x, y)
+			{
 				var baseSquareStyle = getComputedStyle(document.getElementsByClassName("eachSquare")[0]);
 				var baseSquareSize = parseInt(baseSquareStyle.getPropertyValue("width").split("px")[0])
 				var baseSquareMargin = parseInt(baseSquareStyle.getPropertyValue("margin-left").split("px")[0]);
 				var nbrOfMargin = [1, 3, 5, 7]
 
-				socket.emit("placeSquare", {}, element, baseSquareStyle, baseSquareSize, baseSquareMargin, nbrOfMargin);
-			});
+				var element = document.getElementById(squareId);
 
-			socket.on("placeClientSquare", function(element)
-			{
-				element.id = null;
-				document.getElementById("squareGenerated") = element;
+				element.style.marginLeft = (baseSquareSize * x) + nbrOfMargin[x] * baseSquareMargin + "px";
+				element.style.marginTop = (baseSquareSize * y) + nbrOfMargin[y] * baseSquareMargin + "px";
+				element.style.width = "140px";
+				element.style.height = "140px";
 			});
 		});
 	}
@@ -578,15 +582,15 @@
 			{
 				document.addEventListener("keydown", moveListener);
 				disapearHover();
-
 				generateSquares();
 				generateSquares();
 			}
 
-			else if (event.target.id == "multiplayerMode" || event.target.parentElement.id == "multiplayerMode")
+			else if (event.target.id ==	 "multiplayerMode" || event.target.parentElement.id == "multiplayerMode")
 			{
-				document.getElementById("multiplayerMode").innerHTML = "<h2>Not finished yet !</h2>";
-				// multiplayerGame();
+				document.addEventListener("keydown", moveListener);
+				disapearHover();
+				multiplayerGame();
 			}
 		});
 	}
