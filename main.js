@@ -8,9 +8,78 @@
 	[0, 0, 0, 0]
 	];
 	var moved = 0;
+	var gameOver = 0;
 	
 	var socket;
 	var multiplayer = 0;
+
+	function checkGameIsOver()
+	{
+		var gameIsOver = 1;
+
+		var i = 0;
+		var j = 0;
+		while (squaresPosition[i])
+		{
+			j = 0;
+			while (j < squaresPosition.length)
+			{
+				if (squaresPosition[i][j] == 0)
+				{
+					gameIsOver = 0;
+					break;
+				}
+
+				else
+				{
+					if (squaresPosition[i] != undefined && squaresPosition[i][j + 1] != undefined && squaresPosition[i][j] != 0 && squaresPosition[i][j + 1] != 0)
+					{
+						if (squaresPosition[i][j].children[0].innerHTML == squaresPosition[i][j + 1].children[0].innerHTML)
+						{
+							gameIsOver = 0;
+						}
+					}
+
+					if (squaresPosition[i] != undefined && squaresPosition[i][j - 1] != undefined && squaresPosition[i][j] != 0 && squaresPosition[i][j - 1] != 0)
+					{
+						if (squaresPosition[i][j].children[0].innerHTML == squaresPosition[i][j - 1].children[0].innerHTML)
+						{
+							gameIsOver = 0;
+						}
+					}
+
+					if (squaresPosition[i + 1] != undefined && squaresPosition[i + 1][j] != undefined && squaresPosition[i][j] != 0 && squaresPosition[i + 1][j] != 0)
+					{
+						if (squaresPosition[i][j].children[0].innerHTML == squaresPosition[i + 1][j].children[0].innerHTML)
+						{
+							gameIsOver = 0;
+						}
+					}
+
+					if (squaresPosition[i - 1] != undefined && squaresPosition[i - 1][j] != undefined && squaresPosition[i][j] != 0 && squaresPosition[i - 1][j] != 0)
+					{
+						if (squaresPosition[i][j].children[0].innerHTML == squaresPosition[i - 1][j].children[0].innerHTML)
+						{
+							gameIsOver = 0;
+						}
+					}
+				}
+				j += 1;
+			}
+
+			if (gameIsOver == 0)
+			{
+				break;
+			}
+			i += 1;
+		}
+
+		if (gameIsOver == 1)
+		{
+			gameOver = 1;
+			document.getElementById("gameOver").style.display = "block";
+		}
+	}
 
 	function prepareGame()
 	{
@@ -92,9 +161,12 @@
 			y = 0;
 		}
 
-		if (squaresPosition[y][x] != 0)
+		if (squaresPosition[y][x] != 0 && gameOver == 0)
 		{
-			placeSquare(element);
+			setTimeout(function()
+			{
+				placeSquare(element);
+			}, 10);
 			return 1;
 		}
 
@@ -109,6 +181,7 @@
 		element.style.height = "140px";
 
 		squaresPosition[y][x] = element;
+		checkGameIsOver();
 	}
 
 	function generateSquares()
