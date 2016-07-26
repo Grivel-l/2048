@@ -87,6 +87,8 @@ io.on("connection", function(socket)
 	{
 		generateSquare();
 
+		socket.emit("refreshView", socket.squaresPosition);
+
 		var j = 0;
 		var i = 0;
 		while (socket.squaresPosition[i])
@@ -94,13 +96,23 @@ io.on("connection", function(socket)
 			j = 0;
 			while (j < socket.squaresPosition[i].length)
 			{
-				socket.squaresPosition[i].fusionned = undefined;
+				if (socket.squaresPosition[i][j].fusionned != undefined)
+				{
+					delete socket.squaresPosition[i][j].fusionned;
+				}
+
+				if (socket.squaresPosition[i][j].deleted != undefined)
+				{
+					socket.squaresPosition[i][j] = 0;
+				}
+
 				j += 1;
 			}
 			i += 1;
 		}
 
-		socket.emit("refreshView", socket.squaresPosition);
+		console.log(socket.squaresPosition);
+		console.log("\n\n\n");
 	}
 
 	function upMovement()
@@ -121,9 +133,9 @@ io.on("connection", function(socket)
 				{
 					box = socket.squaresPosition[i][j];
 
-					if (i != 0 && socket.squaresPosition[i][j] != 0)
+					if (i != 0 && box != 0)
 					{
-						value = box.value;
+						value = parseInt(box.value);
 
 						if (socket.squaresPosition[i - 1][j] == 0)
 						{
@@ -135,11 +147,11 @@ io.on("connection", function(socket)
 						else if (value == socket.squaresPosition[i - 1][j].value && socket.squaresPosition[i - 1][j].fusionned == undefined && box.fusionned == undefined)
 						{
 							socket.squaresPosition[i][j].deleted = 1;
-							socket.squaresPosition[i][j] = 0;
 
+							socket.squaresPosition[i - 1][j].value = value * 2;
 							socket.squaresPosition[i - 1][j].className = "squareNbr square" + value * 2;
 							socket.squaresPosition[i - 1][j].innerHTML = "<p>" + value * 2 + "</p>";
-							socket.squaresPosition[i - 1][j].fusionned = 1
+							socket.squaresPosition[i - 1][j].fusionned = 1;
 							moved = 1;
 						}
 					}
@@ -172,9 +184,9 @@ io.on("connection", function(socket)
 				{
 					box = socket.squaresPosition[i][j];
 
-					if (i != socket.squaresPosition.length - 1 && socket.squaresPosition[i][j] != 0)
+					if (i != socket.squaresPosition.length - 1 && box != 0)
 					{
-						value = box.value;
+						value = parseInt(box.value);
 
 						if (socket.squaresPosition[i + 1][j] == 0)
 						{
@@ -186,11 +198,11 @@ io.on("connection", function(socket)
 						else if (value == socket.squaresPosition[i + 1][j].value && socket.squaresPosition[i + 1][j].fusionned == undefined && box.fusionned == undefined)
 						{
 							socket.squaresPosition[i][j].deleted = 1;
-							socket.squaresPosition[i][j] = 0;
 
+							socket.squaresPosition[i + 1][j].value = value * 2;
 							socket.squaresPosition[i + 1][j].className = "squareNbr square" + value * 2;
 							socket.squaresPosition[i + 1][j].innerHTML = "<p>" + value * 2 + "</p>";
-							socket.squaresPosition[i + 1][j].fusionned = 1
+							socket.squaresPosition[i + 1][j].fusionned = 1;
 							moved = 1;
 						}
 					}
@@ -221,9 +233,9 @@ io.on("connection", function(socket)
 				{
 					box = socket.squaresPosition[i][j];
 
-					if (j != socket.squaresPosition.length - 1 && socket.squaresPosition[i][j] != 0)
+					if (j != socket.squaresPosition.length - 1 && box != 0)
 					{
-						value = box.value;
+						value = parseInt(box.value);
 
 						if (socket.squaresPosition[i][j + 1] == 0)
 						{
@@ -235,8 +247,8 @@ io.on("connection", function(socket)
 						else if (value == socket.squaresPosition[i][j + 1].value && socket.squaresPosition[i][j + 1].fusionned == undefined && box.fusionned == undefined)
 						{
 							socket.squaresPosition[i][j].deleted = 1;
-							socket.squaresPosition[i][j] = 0;
 
+							socket.squaresPosition[i][j + 1].value = value * 2;
 							socket.squaresPosition[i][j + 1].className = "squareNbr square" + value * 2;
 							socket.squaresPosition[i][j + 1].innerHTML = "<p>" + value * 2 + "</p>";
 							socket.squaresPosition[i][j + 1].fusionned = 1;
@@ -270,9 +282,9 @@ io.on("connection", function(socket)
 				{
 					box = socket.squaresPosition[i][j];
 
-					if (j != 0 && socket.squaresPosition[i][j] != 0)
+					if (j != 0 && box != 0)
 					{
-						value = box.value;
+						value = parseInt(box.value);
 
 						if (socket.squaresPosition[i][j - 1] == 0)
 						{
@@ -284,8 +296,8 @@ io.on("connection", function(socket)
 						else if (value == socket.squaresPosition[i][j - 1].value && socket.squaresPosition[i][j - 1].fusionned == undefined && box.fusionned == undefined)
 						{
 							socket.squaresPosition[i][j].deleted = 1;
-							socket.squaresPosition[i][j] = 0;
 
+							socket.squaresPosition[i][j - 1].value = value * 2;
 							socket.squaresPosition[i][j - 1].className = "squareNbr square" + value * 2;
 							socket.squaresPosition[i][j - 1].innerHTML = "<p>" + value * 2 + "</p>";
 							socket.squaresPosition[i][j - 1].fusionned = 1;
