@@ -75,11 +75,14 @@ io.on("connection", function(socket)
 
 		if (socket.squaresPosition[y][x] != 0)
 		{
-			placeSquare(squareId);
-			return 1;
+			if (socket.squaresPosition[y][x].deleted == undefined)
+			{
+				placeSquare(squareId, value, className, html);
+				return 1;
+			}
 		}
 
-		socket.squaresPosition[y][x] = { id: squareId, value: value, className: className, innerHTML: html};
+		socket.squaresPosition[y][x] = { id: squareId, value: value, className: className, innerHTML: html };
 		socket.emit("placeClientSquare", squareId, x, y);
 	}
 
@@ -110,9 +113,6 @@ io.on("connection", function(socket)
 			}
 			i += 1;
 		}
-
-		console.log(socket.squaresPosition);
-		console.log("\n\n\n");
 	}
 
 	function upMovement()
