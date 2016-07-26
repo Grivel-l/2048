@@ -25,7 +25,56 @@ io.on("connection", function(socket)
 	socket.squareToDelete = [];
 	socket.squaresPosition = squaresPosition;
 	socket.clientNbr = clients.length;
+	socket.searchingOpponent = 1;
+	socket.opponent = null;
 	clients.push(socket);
+
+	(function searchOpponent()
+	{
+		if (socket.searchingOpponent == 1)
+		{
+			var i = 0;
+			while (clients[i])
+			{
+				if (i != socket.clientNbr)
+				{
+					if (clients[i].searchingOpponent == 1 && socket.searchingOpponent == 1)
+					{
+						socket.searchingOpponent = 0;
+						socket.opponent = i;
+
+						clients[i].searchingOpponent = 0;
+						clients[i].opponent = socket.clientNbr;
+					}
+				}
+
+				else
+				{
+					if (clients[i].searchingOpponent == 0)
+					{
+						socket.searchingOpponent = 0;
+						socket.opponent = clients[i].opponent;
+					}
+				}
+
+				if (socket.searchingOpponent == 0)
+				{
+					break;
+				}
+				i += 1;
+			}
+
+			setTimeout(function()
+			{
+				searchOpponent()
+			}, 1);
+		}
+
+		else
+		{
+			launchGame();
+		}
+	})();
 
 	function generateSquare()
 	{
@@ -325,6 +374,11 @@ io.on("connection", function(socket)
 		}
 
 		refreshView();
+	}
+
+	function launchGame()
+	{
+		socket.emit("launchGameClient");
 	}
 
 	socket.on("placeSquare", placeSquare);

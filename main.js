@@ -520,6 +520,7 @@
 		socket = io.connect("http://localhost:8080");
 
 		var wrapper = document.getElementById("wrapper");
+		var opponentHover = document.getElementById("searchingOpponent");
 
 		wrapper.style.left = "200px";
 		wrapper.style.position = "absolute";
@@ -529,8 +530,7 @@
 		document.getElementById("wrapper2").style.display = "block";
 
 		prepareGame();
-		generateSquares();
-		generateSquares();
+		opponentHover.style.display = "block";
 
 		socket.on("connect", function()
 		{
@@ -598,6 +598,14 @@
 					}
 					i += 1;
 				}
+			});
+
+			socket.on("launchGameClient", function()
+			{
+				opponentHover.style.display = "none";
+				
+				generateSquares();
+				generateSquares();
 			});
 		});
 	}

@@ -79,24 +79,6 @@ html, body
     background-color: #edcf72;
 }
 
-#gameOver
-{
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.5);
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    text-align: center;
-    display: none;
-}
-
-#gameOver h2
-{
-    font-size: 8em;
-    margin-top: 20%;
-}
-
 .eachSquare
 {
     width: 140px;
@@ -133,50 +115,59 @@ html, body
 .square8
 {
     background-color: #f2b179;
+    color: white;
 }
 
 .square16
 {
     background-color: #f2b179;
+    color: white;
 }
 
 .square32
 {
     background-color: #f67c5f;
+    color: white;
 }
 
 .square64
 {
     background-color: #f65e3b;
+    color: white;
 }
 
 .square128
 {
     background-color: #edcf72;
+    color: white;
     font-size: 4em;
 }
 
 .square256
 {
     background-color: #edcf72;
+    color: white;
     font-size: 4em;
 }
 
 .square512
 {
     background-color: #edcf72;
+    color: white;
     font-size: 4em;
 }
 
 .square1024
 {
     background-color: #ede372;
+    color: white;
     font-size: 3em;
 }
 
 .square2048
 {
     background-color: #edf300;
+    color: white;
     font-size: 3em;
 }
 
@@ -228,4 +219,22 @@ html, body
     background-color: rgba(0, 0, 0, 0.3);
     border-radius: 10px; 
     margin-left: 50%;
+}
+
+.hover
+{
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.5);
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    text-align: center;
+    display: none;
+}
+
+.hover h2
+{
+    font-size: 8em;
+    margin-top: 20%;
 }
