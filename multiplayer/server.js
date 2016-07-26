@@ -21,6 +21,7 @@ io.on("connection", function(socket)
 
 	var squareNbr = 0;
 
+	socket.moved = 0;
 	socket.squareToDelete = [];
 	socket.squaresPosition = squaresPosition;
 	socket.clientNbr = clients.length;
@@ -89,7 +90,12 @@ io.on("connection", function(socket)
 
 	function refreshView()
 	{
-		generateSquare();
+		if (socket.moved == 1)
+		{
+			generateSquare();
+		}
+
+		socket.moved = 0;
 
 		socket.emit("refreshView", socket.squaresPosition, socket.squareToDelete);
 		socket.squareToDelete = [];
@@ -143,7 +149,7 @@ io.on("connection", function(socket)
 						{
 							socket.squaresPosition[i - 1][j] = box;
 							socket.squaresPosition[i][j] = 0;
-							moved = 1;
+							socket.moved = 1;
 						}
 
 						else if (value == socket.squaresPosition[i - 1][j].value && socket.squaresPosition[i - 1][j].fusionned == undefined && box.fusionned == undefined && socket.squaresPosition[i - 1][j].deleted == undefined && box.deleted == undefined)
@@ -155,7 +161,7 @@ io.on("connection", function(socket)
 							socket.squaresPosition[i - 1][j].className = "squareNbr square" + value * 2;
 							socket.squaresPosition[i - 1][j].innerHTML = "<p>" + value * 2 + "</p>";
 							socket.squaresPosition[i - 1][j].fusionned = 1;
-							moved = 1;
+							socket.moved = 1;
 						}
 					}
 
@@ -195,7 +201,7 @@ io.on("connection", function(socket)
 						{
 							socket.squaresPosition[i + 1][j] = box;
 							socket.squaresPosition[i][j] = 0;
-							moved = 1;
+							socket.moved = 1;
 						}
 
 						else if (value == socket.squaresPosition[i + 1][j].value && socket.squaresPosition[i + 1][j].fusionned == undefined && box.fusionned == undefined && socket.squaresPosition[i + 1][j].deleted == undefined && box.deleted == undefined)
@@ -207,7 +213,7 @@ io.on("connection", function(socket)
 							socket.squaresPosition[i + 1][j].className = "squareNbr square" + value * 2;
 							socket.squaresPosition[i + 1][j].innerHTML = "<p>" + value * 2 + "</p>";
 							socket.squaresPosition[i + 1][j].fusionned = 1;
-							moved = 1;
+							socket.moved = 1;
 						}
 					}
 
@@ -245,7 +251,7 @@ io.on("connection", function(socket)
 						{
 							socket.squaresPosition[i][j + 1] = box;
 							socket.squaresPosition[i][j] = 0;
-							moved = 1;
+							socket.moved = 1;
 						}
 
 						else if (value == socket.squaresPosition[i][j + 1].value && socket.squaresPosition[i][j + 1].fusionned == undefined && box.fusionned == undefined && socket.squaresPosition[i][j + 1].deleted == undefined && box.deleted == undefined)
@@ -257,7 +263,7 @@ io.on("connection", function(socket)
 							socket.squaresPosition[i][j + 1].className = "squareNbr square" + value * 2;
 							socket.squaresPosition[i][j + 1].innerHTML = "<p>" + value * 2 + "</p>";
 							socket.squaresPosition[i][j + 1].fusionned = 1;
-							moved = 1;
+							socket.moved = 1;
 						}
 					}
 
@@ -295,7 +301,7 @@ io.on("connection", function(socket)
 						{
 							socket.squaresPosition[i][j - 1] = box;
 							socket.squaresPosition[i][j] = 0;
-							moved = 1;
+							socket.moved = 1;
 						}
 
 						else if (value == socket.squaresPosition[i][j - 1].value && socket.squaresPosition[i][j - 1].fusionned == undefined && box.fusionned == undefined && socket.squaresPosition[i][j - 1].deleted == undefined && box.deleted == undefined)
@@ -307,7 +313,7 @@ io.on("connection", function(socket)
 							socket.squaresPosition[i][j - 1].className = "squareNbr square" + value * 2;
 							socket.squaresPosition[i][j - 1].innerHTML = "<p>" + value * 2 + "</p>";
 							socket.squaresPosition[i][j - 1].fusionned = 1;
-							moved = 1;
+							socket.moved = 1;
 						}
 					}
 
