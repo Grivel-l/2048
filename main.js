@@ -561,7 +561,7 @@
 				element.style.height = "140px";
 			});
 
-			socket.on("refreshView", function(positions)
+			socket.on("refreshView", function(positions, toDelete)
 			{
 				var baseSquareStyle = getComputedStyle(document.getElementsByClassName("eachSquare")[0]);
 				var baseSquareSize = parseInt(baseSquareStyle.getPropertyValue("width").split("px")[0])
@@ -569,6 +569,13 @@
 				var nbrOfMargin = [1, 3, 5, 7]
 
 				var i = 0;
+				while (toDelete[i])
+				{
+					document.getElementById("allSquaresHover").removeChild(document.getElementById(toDelete[i].id));
+					i += 1;
+				}
+
+				i = 0;
 				var j = 0;
 				while (positions[i])
 				{
@@ -579,12 +586,7 @@
 						{
 							element = document.getElementById(positions[i][j].id);
 
-							if (positions[i][j].deleted == 1)
-							{
-								document.getElementById("allSquaresHover").removeChild(element);
-							}
-
-							else
+							if (positions[i][j].deleted == undefined)
 							{
 								element.className = positions[i][j].className;
 								element.innerHTML = positions[i][j].innerHTML;
