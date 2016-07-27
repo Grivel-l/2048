@@ -593,7 +593,7 @@
 				{
 					if (opponent == 1)
 					{
-						document.getElementById("allSquaresHover").removeChild(document.getElementById("opponentSquare" + toDelete[i].id.split("square")[1]));
+						document.getElementById("allSquaresHover2").removeChild(document.getElementById("opponentSquare" + toDelete[i].id.split("square")[1]));
 					}
 
 					else
