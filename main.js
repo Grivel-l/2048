@@ -539,7 +539,7 @@
 				var element = document.createElement("div");
 				element.className = "squareNbr square" + square.value;
 				element.innerHTML = "<p>" + square.value + "</p>";
-				element.id = square.id;
+				element.id = "opponentSquare" + square.id.split("square")[1];
 
 				document.getElementById("allSquaresHover2").appendChild(element);
 
@@ -547,8 +547,6 @@
 				var baseSquareSize = parseInt(baseSquareStyle.getPropertyValue("width").split("px")[0]);
 				var baseSquareMargin = parseInt(baseSquareStyle.getPropertyValue("margin-left").split("px")[0]);
 				var nbrOfMargin = [1, 3, 5, 7];
-
-				var element = document.getElementById(square.id);
 
 				element.style.marginLeft = (baseSquareSize * x) + nbrOfMargin[x] * baseSquareMargin + "px";
 				element.style.marginTop = (baseSquareSize * y) + nbrOfMargin[y] * baseSquareMargin + "px";

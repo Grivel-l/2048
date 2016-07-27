@@ -136,7 +136,6 @@ io.on("connection", function(socket)
 
 		socket.squaresPosition[y][x] = { id: squareId, value: value, className: className, innerHTML: html };
 		socket.emit("placeClientSquare", squareId, x, y);
-
 		io.to(clients[socket.opponent].id).emit("generateOpponentSquare", socket.squaresPosition[y][x], x, y);
 	}
 
