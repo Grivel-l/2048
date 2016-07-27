@@ -91,6 +91,7 @@ io.on("connection", function(socket)
 		}
 		
 		socket.emit("generateClientSquare", randomNbr, "square" + squareNbr);
+		
 		squareNbr += 1;
 	}
 
@@ -135,6 +136,8 @@ io.on("connection", function(socket)
 
 		socket.squaresPosition[y][x] = { id: squareId, value: value, className: className, innerHTML: html };
 		socket.emit("placeClientSquare", squareId, x, y);
+
+		io.to(clients[socket.opponent].id).emit("generateOpponentSquare", socket.squaresPosition[y][x], x, y);
 	}
 
 	function refreshView()
@@ -147,6 +150,7 @@ io.on("connection", function(socket)
 		socket.moved = 0;
 
 		socket.emit("refreshView", socket.squaresPosition, socket.squareToDelete);
+		io.to(clients[socket.opponent].id).emit("refreshView", socket.squaresPosition, socket.squareToDelete, 1);
 		socket.squareToDelete = [];
 
 		var j = 0;
@@ -170,6 +174,8 @@ io.on("connection", function(socket)
 			}
 			i += 1;
 		}
+
+		clients[socket.clientNbr] = socket;
 	}
 
 	function upMovement()

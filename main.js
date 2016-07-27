@@ -534,6 +534,28 @@
 
 		socket.on("connect", function()
 		{
+			socket.on("generateOpponentSquare", function(square, x, y)
+			{
+				var element = document.createElement("div");
+				element.className = "squareNbr square" + square.value;
+				element.innerHTML = "<p>" + square.value + "</p>";
+				element.id = square.id;
+
+				document.getElementById("allSquaresHover2").appendChild(element);
+
+				var baseSquareStyle = getComputedStyle(document.getElementsByClassName("eachSquare")[0]);
+				var baseSquareSize = parseInt(baseSquareStyle.getPropertyValue("width").split("px")[0]);
+				var baseSquareMargin = parseInt(baseSquareStyle.getPropertyValue("margin-left").split("px")[0]);
+				var nbrOfMargin = [1, 3, 5, 7];
+
+				var element = document.getElementById(square.id);
+
+				element.style.marginLeft = (baseSquareSize * x) + nbrOfMargin[x] * baseSquareMargin + "px";
+				element.style.marginTop = (baseSquareSize * y) + nbrOfMargin[y] * baseSquareMargin + "px";
+				element.style.width = "140px";
+				element.style.height = "140px";
+			});
+
 			socket.on("generateClientSquare", function(randomNbr, squareNbr)
 			{
 				var element = document.createElement("div");
@@ -549,9 +571,9 @@
 			socket.on("placeClientSquare", function(squareId, x, y)
 			{
 				var baseSquareStyle = getComputedStyle(document.getElementsByClassName("eachSquare")[0]);
-				var baseSquareSize = parseInt(baseSquareStyle.getPropertyValue("width").split("px")[0])
+				var baseSquareSize = parseInt(baseSquareStyle.getPropertyValue("width").split("px")[0]);
 				var baseSquareMargin = parseInt(baseSquareStyle.getPropertyValue("margin-left").split("px")[0]);
-				var nbrOfMargin = [1, 3, 5, 7]
+				var nbrOfMargin = [1, 3, 5, 7];
 
 				var element = document.getElementById(squareId);
 
@@ -561,7 +583,7 @@
 				element.style.height = "140px";
 			});
 
-			socket.on("refreshView", function(positions, toDelete)
+			socket.on("refreshView", function(positions, toDelete, opponent)
 			{
 				var baseSquareStyle = getComputedStyle(document.getElementsByClassName("eachSquare")[0]);
 				var baseSquareSize = parseInt(baseSquareStyle.getPropertyValue("width").split("px")[0])
@@ -571,7 +593,15 @@
 				var i = 0;
 				while (toDelete[i])
 				{
-					document.getElementById("allSquaresHover").removeChild(document.getElementById(toDelete[i].id));
+					if (opponent == 1)
+					{
+						document.getElementById("allSquaresHover").removeChild(document.getElementById("opponentSquare" + toDelete[i].id.split("square")[1]));
+					}
+
+					else
+					{
+						document.getElementById("allSquaresHover").removeChild(document.getElementById(toDelete[i].id));
+					}
 					i += 1;
 				}
 
@@ -584,7 +614,15 @@
 					{
 						if (positions[i][j] != 0)
 						{
-							element = document.getElementById(positions[i][j].id);
+							if (opponent == 1)
+							{
+								element = document.getElementById("opponentSquare" + positions[i][j].id.split("square")[1]);
+							}
+
+							else
+							{
+								element = document.getElementById(positions[i][j].id);
+							}
 
 							if (positions[i][j].deleted == undefined)
 							{
@@ -603,7 +641,7 @@
 			socket.on("launchGameClient", function()
 			{
 				opponentHover.style.display = "none";
-				
+
 				generateSquares();
 				generateSquares();
 			});
