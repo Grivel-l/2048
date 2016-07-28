@@ -660,40 +660,123 @@
 				generateSquares();
 			});
 
-			socket.on("malus", function()
+			socket.on("launchMalus", function()
 			{
+				socket.emit("malus");
+			});
+
+			socket.on("malus", function(square)
+			{
+				moving = 1;
+
+				var baseSquareStyle = getComputedStyle(document.getElementsByClassName("eachSquare")[0]);
+				var baseSquareSize = parseInt(baseSquareStyle.getPropertyValue("width").split("px")[0])
+				var baseSquareMargin = parseInt(baseSquareStyle.getPropertyValue("margin-left").split("px")[0]);
+				var nbrOfMargin = [1, 3, 5, 7]
+
+				var allSquares = document.getElementById("allSquaresHover");
+
+				var element = document.getElementById(square.id);
+				element.style.zIndex = 2;
+
+				var img = document.createElement("img");
+				img.src = "assets/img/fatality.gif";
+				img.width = img.width * 1.5;
+				img.height = img.height * 1.5;
+
+				var marginLeft = (baseSquareSize * square.x) + nbrOfMargin[square.x] * baseSquareMargin - img.width / 1.45 + "px";
+				var marginTop = (baseSquareSize * square.y) + nbrOfMargin[square.y] * baseSquareMargin - img.height / 4 + "px";
 				
+				img.style.marginLeft = marginLeft;
+				img.style.marginTop = marginTop;
+				img.style.position = "absolute";
+				img.style.zIndex = 1;
+
+				function getMarginLeft(element)
+				{
+					return parseInt(getComputedStyle(element).getPropertyValue("margin-left").split("px")[0]);
+				}
+
+				function getMarginTop(element)
+				{
+					return parseInt(getComputedStyle(element).getPropertyValue("margin-top").split("px")[0]);
+				}
+
+				setTimeout(function()
+				{
+					element.style.transition = "0.27s ease-in-out all";
+					element.style.marginLeft = getMarginLeft(element) - 160 + "px";
+					element.style.marginTop = getMarginTop(element) - 140 + "px";
+					element.style.transform = "rotateZ(-45deg)";
+
+					setTimeout(function()
+					{
+						element.style.marginLeft = getMarginLeft(element) - 80 + "px";
+						element.style.marginTop = getMarginTop(element) + 140 + "px";
+						element.style.transform = "rotateZ(30deg)";
+
+						setTimeout(function()
+						{
+							element.style.marginLeft = getMarginLeft(element) - 50 + "px";
+							element.style.marginTop = getMarginTop(element) - 150 + "px";
+
+							setTimeout(function()
+							{
+								var disapear = document.createElement("img");
+								disapear.src = "assets/img/disapear.gif";
+								disapear.width = img.width * 1.2;
+								disapear.height = img.height * 1.2;
+								disapear.style.marginLeft = getMarginLeft(img) - 50 + "px";
+								disapear.style.marginTop = getMarginTop(img) - 100 + "px";
+								disapear.style.position = "absolute";
+								disapear.style.zIndex = 2;
+
+								allSquares.appendChild(disapear);
+								allSquares.removeChild(img);
+								allSquares.removeChild(element);
+
+								setTimeout(function()
+								{
+									allSquares.removeChild(disapear);
+									moving = 0;
+								}, 2000);
+							}, 400);
+						}, 650);
+					}, 950);
+				}, 900);
+
+				allSquares.appendChild(img);
 			});
 		});
-	}
+}
 
-	/* Multiplayer */
+/* Multiplayer */
 
-	function disapearHover()
+function disapearHover()
+{
+	document.getElementById("gameMenu").style.display = "none";
+}
+
+function addListeners()
+{
+	document.getElementById("menuWrapper").addEventListener("click", function(event)
 	{
-		document.getElementById("gameMenu").style.display = "none";
-	}
-
-	function addListeners()
-	{
-		document.getElementById("menuWrapper").addEventListener("click", function(event)
+		if (event.target.id == "classicMode" || event.target.parentElement.id == "classicMode")
 		{
-			if (event.target.id == "classicMode" || event.target.parentElement.id == "classicMode")
-			{
-				document.addEventListener("keydown", moveListener);
-				disapearHover();
-				generateSquares();
-				generateSquares();
-			}
+			document.addEventListener("keydown", moveListener);
+			disapearHover();
+			generateSquares();
+			generateSquares();
+		}
 
-			else if (event.target.id ==	 "multiplayerMode" || event.target.parentElement.id == "multiplayerMode")
-			{
-				document.addEventListener("keydown", moveListener);
-				disapearHover();
-				multiplayerGame();
-			}
-		});
-	}
+		else if (event.target.id ==	 "multiplayerMode" || event.target.parentElement.id == "multiplayerMode")
+		{
+			document.addEventListener("keydown", moveListener);
+			disapearHover();
+			multiplayerGame();
+		}
+	});
+}
 
-	document.addEventListener("DOMContentLoaded", prepareGame);
+document.addEventListener("DOMContentLoaded", prepareGame);
 })();

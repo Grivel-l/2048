@@ -77,6 +77,42 @@ io.on("connection", function(socket)
 		}
 	})();
 
+	function malus(launch)
+	{
+		if (launch == 1)
+		{
+			clients[socket.opponent].emit("launchMalus");
+		}
+
+		else
+		{
+			var biggest = { nbr: 0, left: 0, top: 0 };
+
+			var i = 0;
+			var j = 0;
+			while (socket.squaresPosition[i])
+			{
+				j = 0;
+				while (j < socket.squaresPosition[i].length)
+				{
+					if (socket.squaresPosition[i][j] != 0 && socket.squaresPosition[i][j].value > biggest.nbr)
+					{
+						biggest.nbr = socket.squaresPosition[i][j].value;
+						biggest.id = socket.squaresPosition[i][j].id;
+						biggest.x = j;
+						biggest.y = i;
+					}
+
+					j += 1;
+				}
+				i += 1;
+			}
+
+			socket.squaresPosition[biggest.y][biggest.x].deleted = 1;
+			socket.emit("malus", biggest);
+		}
+	}
+
 	function generateSquare()
 	{
 		var randomNbr = Math.floor(Math.random() * (4 - 1)) + 1;
@@ -233,7 +269,7 @@ io.on("connection", function(socket)
 								socket.squaresPosition[i - 1][j].fusionned = 1;
 								if (box.malus == 1)
 								{
-									clients[socket.opponent].emit("malus");
+									malus(1);
 								}
 								socket.squaresPosition[i - 1][j].malus = 0;
 								socket.moved = 1;
@@ -293,7 +329,7 @@ io.on("connection", function(socket)
 								socket.squaresPosition[i + 1][j].fusionned = 1;
 								if (box.malus == 1)
 								{
-									clients[socket.opponent].emit("malus");
+									malus(1);
 								}
 								socket.squaresPosition[i + 1][j].malus = 0;
 								socket.moved = 1;
@@ -351,7 +387,7 @@ io.on("connection", function(socket)
 								socket.squaresPosition[i][j + 1].fusionned = 1;
 								if (box.malus == 1)
 								{
-									clients[socket.opponent].emit("malus");
+									malus(1);
 								}
 								socket.squaresPosition[i][j + 1].malus = 0;
 								socket.moved = 1;
@@ -409,7 +445,7 @@ io.on("connection", function(socket)
 								socket.squaresPosition[i][j - 1].fusionned = 1;
 								if (box.malus == 1)
 								{
-									clients[socket.opponent].emit("malus");
+									malus(1);
 								}
 								socket.squaresPosition[i][j - 1].malus = 0;
 								socket.moved = 1;
@@ -439,6 +475,8 @@ io.on("connection", function(socket)
 	socket.on("right", rightMovement);
 	socket.on("down", downMovement);
 	socket.on("left", leftMovement);
+
+	socket.on("malus", malus);
 
 	socket.on("disconnect", function()
 	{
