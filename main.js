@@ -534,10 +534,19 @@
 
 		socket.on("connect", function()
 		{
-			socket.on("generateOpponentSquare", function(square, x, y)
+			socket.on("generateOpponentSquare", function(square, x, y, malus)
 			{
 				var element = document.createElement("div");
-				element.className = "squareNbr square" + square.value;
+				console.log(malus);
+				if (malus == 0)
+				{
+					element.className = "squareNbr square" + square.value;
+				}
+
+				else
+				{
+					element.className = "squareNbr square" + square.value + " malus";
+				}
 				element.innerHTML = "<p>" + square.value + "</p>";
 				element.id = "opponentSquare" + square.id.split("square")[1];
 
@@ -554,16 +563,24 @@
 				element.style.height = "140px";
 			});
 
-			socket.on("generateClientSquare", function(randomNbr, squareNbr)
+			socket.on("generateClientSquare", function(randomNbr, squareNbr, malus)
 			{
 				var element = document.createElement("div");
-				element.className = "squareNbr square" + randomNbr;
+				if (malus == 0)
+				{
+					element.className = "squareNbr square" + randomNbr;
+				}
+
+				else
+				{
+					element.className = "squareNbr square" + randomNbr + " malus";
+				}
 				element.innerHTML = "<p>" + randomNbr + "</p>";
 				element.id = squareNbr;
 
 				document.getElementById("allSquaresHover").appendChild(element);
 
-				socket.emit("placeSquare", squareNbr, randomNbr, "squareNbr square" + randomNbr, "<p>" + randomNbr + "</p>");
+				socket.emit("placeSquare", squareNbr, randomNbr, element.className, "<p>" + randomNbr + "</p>", malus);
 			});
 
 			socket.on("placeClientSquare", function(squareId, x, y)
@@ -675,5 +692,4 @@
 	}
 
 	document.addEventListener("DOMContentLoaded", prepareGame);
-
 })();

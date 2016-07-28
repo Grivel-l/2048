@@ -27,6 +27,7 @@ io.on("connection", function(socket)
 	socket.clientNbr = clients.length;
 	socket.searchingOpponent = 1;
 	socket.opponent = null;
+
 	clients.push(socket);
 
 	(function searchOpponent()
@@ -79,6 +80,7 @@ io.on("connection", function(socket)
 	function generateSquare()
 	{
 		var randomNbr = Math.floor(Math.random() * (4 - 1)) + 1;
+		var malus = 0;
 
 		if (randomNbr == 3)
 		{
@@ -87,15 +89,27 @@ io.on("connection", function(socket)
 
 		else
 		{
+			malus = Math.floor(Math.random() * (4 - 1)) + 1;
+
+			if (malus == 3)
+			{
+				malus = 1;
+			}
+
+			else
+			{
+				malus = 0;
+			}
+
 			randomNbr = 2;
 		}
 		
-		socket.emit("generateClientSquare", randomNbr, "square" + squareNbr);
+		socket.emit("generateClientSquare", randomNbr, "square" + squareNbr, malus);
 		
 		squareNbr += 1;
 	}
 
-	function placeSquare(squareId, value, className, html)
+	function placeSquare(squareId, value, className, html, malus)
 	{
 		var randomPlace = Math.floor(Math.random() * (17 - 0)) + 0;
 
@@ -129,14 +143,14 @@ io.on("connection", function(socket)
 		{
 			if (socket.squaresPosition[y][x].deleted == undefined)
 			{
-				placeSquare(squareId, value, className, html);
+				placeSquare(squareId, value, className, html, malus);
 				return 1;
 			}
 		}
 
-		socket.squaresPosition[y][x] = { id: squareId, value: value, className: className, innerHTML: html };
+		socket.squaresPosition[y][x] = { id: squareId, value: value, className: className, innerHTML: html, malus: malus };
 		socket.emit("placeClientSquare", squareId, x, y);
-		io.to(clients[socket.opponent].id).emit("generateOpponentSquare", socket.squaresPosition[y][x], x, y);
+		io.to(clients[socket.opponent].id).emit("generateOpponentSquare", socket.squaresPosition[y][x], x, y, malus);
 	}
 
 	function refreshView()
@@ -393,5 +407,10 @@ io.on("connection", function(socket)
 	socket.on("right", rightMovement);
 	socket.on("down", downMovement);
 	socket.on("left", leftMovement);
+
+	socket.on("disconnect", function()
+	{
+		clients[socket.clientNbr] = "";
+	});
 });
 server.listen(8080);
