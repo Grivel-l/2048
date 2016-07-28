@@ -108,7 +108,9 @@ io.on("connection", function(socket)
 				i += 1;
 			}
 
-			socket.squaresPosition[biggest.y][biggest.x].deleted = 1;
+			socket.squaresPosition[biggest.y][biggest.x] = 0;
+			clients[socket.clientNbr] = socket;
+			
 			socket.emit("malus", biggest);
 		}
 	}
