@@ -222,14 +222,22 @@ io.on("connection", function(socket)
 
 						else if (value == socket.squaresPosition[i - 1][j].value && socket.squaresPosition[i - 1][j].fusionned == undefined && box.fusionned == undefined && socket.squaresPosition[i - 1][j].deleted == undefined && box.deleted == undefined)
 						{
-							socket.squaresPosition[i][j].deleted = 1;
-							socket.squareToDelete.push(socket.squaresPosition[i][j]);
+							if (socket.squaresPosition[i - 1][j].malus == box.malus)
+							{
+								socket.squaresPosition[i][j].deleted = 1;
+								socket.squareToDelete.push(socket.squaresPosition[i][j]);
 
-							socket.squaresPosition[i - 1][j].value = value * 2;
-							socket.squaresPosition[i - 1][j].className = "squareNbr square" + value * 2;
-							socket.squaresPosition[i - 1][j].innerHTML = "<p>" + value * 2 + "</p>";
-							socket.squaresPosition[i - 1][j].fusionned = 1;
-							socket.moved = 1;
+								socket.squaresPosition[i - 1][j].value = value * 2;
+								socket.squaresPosition[i - 1][j].className = "squareNbr square" + value * 2;
+								socket.squaresPosition[i - 1][j].innerHTML = "<p>" + value * 2 + "</p>";
+								socket.squaresPosition[i - 1][j].fusionned = 1;
+								if (box.malus == 1)
+								{
+									clients[socket.opponent].emit("malus");
+								}
+								socket.squaresPosition[i - 1][j].malus = 0;
+								socket.moved = 1;
+							}
 						}
 					}
 
@@ -274,14 +282,22 @@ io.on("connection", function(socket)
 
 						else if (value == socket.squaresPosition[i + 1][j].value && socket.squaresPosition[i + 1][j].fusionned == undefined && box.fusionned == undefined && socket.squaresPosition[i + 1][j].deleted == undefined && box.deleted == undefined)
 						{
-							socket.squaresPosition[i][j].deleted = 1;
-							socket.squareToDelete.push(socket.squaresPosition[i][j]);
+							if (socket.squaresPosition[i + 1][j].malus == box.malus)
+							{
+								socket.squaresPosition[i][j].deleted = 1;
+								socket.squareToDelete.push(socket.squaresPosition[i][j]);
 
-							socket.squaresPosition[i + 1][j].value = value * 2;
-							socket.squaresPosition[i + 1][j].className = "squareNbr square" + value * 2;
-							socket.squaresPosition[i + 1][j].innerHTML = "<p>" + value * 2 + "</p>";
-							socket.squaresPosition[i + 1][j].fusionned = 1;
-							socket.moved = 1;
+								socket.squaresPosition[i + 1][j].value = value * 2;
+								socket.squaresPosition[i + 1][j].className = "squareNbr square" + value * 2;
+								socket.squaresPosition[i + 1][j].innerHTML = "<p>" + value * 2 + "</p>";
+								socket.squaresPosition[i + 1][j].fusionned = 1;
+								if (box.malus == 1)
+								{
+									clients[socket.opponent].emit("malus");
+								}
+								socket.squaresPosition[i + 1][j].malus = 0;
+								socket.moved = 1;
+							}
 						}
 					}
 
@@ -324,14 +340,22 @@ io.on("connection", function(socket)
 
 						else if (value == socket.squaresPosition[i][j + 1].value && socket.squaresPosition[i][j + 1].fusionned == undefined && box.fusionned == undefined && socket.squaresPosition[i][j + 1].deleted == undefined && box.deleted == undefined)
 						{
-							socket.squaresPosition[i][j].deleted = 1;
-							socket.squareToDelete.push(socket.squaresPosition[i][j]);
+							if (socket.squaresPosition[i][j + 1].malus == box.malus)
+							{
+								socket.squaresPosition[i][j].deleted = 1;
+								socket.squareToDelete.push(socket.squaresPosition[i][j]);
 
-							socket.squaresPosition[i][j + 1].value = value * 2;
-							socket.squaresPosition[i][j + 1].className = "squareNbr square" + value * 2;
-							socket.squaresPosition[i][j + 1].innerHTML = "<p>" + value * 2 + "</p>";
-							socket.squaresPosition[i][j + 1].fusionned = 1;
-							socket.moved = 1;
+								socket.squaresPosition[i][j + 1].value = value * 2;
+								socket.squaresPosition[i][j + 1].className = "squareNbr square" + value * 2;
+								socket.squaresPosition[i][j + 1].innerHTML = "<p>" + value * 2 + "</p>";
+								socket.squaresPosition[i][j + 1].fusionned = 1;
+								if (box.malus == 1)
+								{
+									clients[socket.opponent].emit("malus");
+								}
+								socket.squaresPosition[i][j + 1].malus = 0;
+								socket.moved = 1;
+							}
 						}
 					}
 
@@ -374,14 +398,22 @@ io.on("connection", function(socket)
 
 						else if (value == socket.squaresPosition[i][j - 1].value && socket.squaresPosition[i][j - 1].fusionned == undefined && box.fusionned == undefined && socket.squaresPosition[i][j - 1].deleted == undefined && box.deleted == undefined)
 						{
-							socket.squaresPosition[i][j].deleted = 1;
-							socket.squareToDelete.push(socket.squaresPosition[i][j]);
+							if (socket.squaresPosition[i][j - 1].malus == box.malus)
+							{
+								socket.squaresPosition[i][j].deleted = 1;
+								socket.squareToDelete.push(socket.squaresPosition[i][j]);
 
-							socket.squaresPosition[i][j - 1].value = value * 2;
-							socket.squaresPosition[i][j - 1].className = "squareNbr square" + value * 2;
-							socket.squaresPosition[i][j - 1].innerHTML = "<p>" + value * 2 + "</p>";
-							socket.squaresPosition[i][j - 1].fusionned = 1;
-							socket.moved = 1;
+								socket.squaresPosition[i][j - 1].value = value * 2;
+								socket.squaresPosition[i][j - 1].className = "squareNbr square" + value * 2;
+								socket.squaresPosition[i][j - 1].innerHTML = "<p>" + value * 2 + "</p>";
+								socket.squaresPosition[i][j - 1].fusionned = 1;
+								if (box.malus == 1)
+								{
+									clients[socket.opponent].emit("malus");
+								}
+								socket.squaresPosition[i][j - 1].malus = 0;
+								socket.moved = 1;
+							}
 						}
 					}
 

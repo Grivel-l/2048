@@ -537,7 +537,6 @@
 			socket.on("generateOpponentSquare", function(square, x, y, malus)
 			{
 				var element = document.createElement("div");
-				console.log(malus);
 				if (malus == 0)
 				{
 					element.className = "squareNbr square" + square.value;
@@ -659,6 +658,11 @@
 
 				generateSquares();
 				generateSquares();
+			});
+
+			socket.on("malus", function()
+			{
+				
 			});
 		});
 	}
