@@ -95,11 +95,13 @@ html, body
     height: 0px;
     font-size: 6em;
     border-radius: 5px;
-    text-align: center;
     position: absolute;
     margin: 3.5px 5px 3.5px 5px;
     overflow: hidden;
     transition: 0.3s ease-in-out all;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .square2

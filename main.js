@@ -712,7 +712,8 @@
 					return parseInt(getComputedStyle(element).getPropertyValue("margin-top").split("px")[0]);
 				}
 
-				function getHeight(element)				{
+				function getHeight(element)
+				{
 					return parseInt(getComputedStyle(element).getPropertyValue("height").split("px")[0]);
 				}
 

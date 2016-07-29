@@ -108,11 +108,14 @@ io.on("connection", function(socket)
 				i += 1;
 			}
 
-			socket.squaresPosition[biggest.y][biggest.x] = 0;
-			clients[socket.clientNbr] = socket;
-			
-			socket.emit("malus", biggest);
-			clients[socket.opponent].emit("malus", biggest, 1);
+			if (biggest.nbr != 0)
+			{
+				socket.squaresPosition[biggest.y][biggest.x] = 0;
+				clients[socket.clientNbr] = socket;
+				
+				socket.emit("malus", biggest);
+				clients[socket.opponent].emit("malus", biggest, 1);
+			}
 		}
 	}
 
