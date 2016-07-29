@@ -442,6 +442,7 @@
 
 	function moveListener(event)
 	{
+		console.log(event);
 		if (moving == 1)
 		{
 			return 1;
@@ -665,18 +666,27 @@
 				socket.emit("malus");
 			});
 
-			socket.on("malus", function(square)
+			socket.on("malus", function(square, opponent)
 			{
-				moving = 1;
+				if (opponent == 1)
+				{
+					var allSquares = document.getElementById("allSquaresHover2");
+					var element = document.getElementById("opponentSquare" + square.id.split("square")[1]);
+				}
+
+				else
+				{
+					moving = 1;
+					var allSquares = document.getElementById("allSquaresHover");
+					var element = document.getElementById(square.id);
+				}
+				
 
 				var baseSquareStyle = getComputedStyle(document.getElementsByClassName("eachSquare")[0]);
 				var baseSquareSize = parseInt(baseSquareStyle.getPropertyValue("width").split("px")[0])
 				var baseSquareMargin = parseInt(baseSquareStyle.getPropertyValue("margin-left").split("px")[0]);
-				var nbrOfMargin = [1, 3, 5, 7]
+				var nbrOfMargin = [1, 3, 5, 7];
 
-				var allSquares = document.getElementById("allSquaresHover");
-
-				var element = document.getElementById(square.id);
 				element.style.zIndex = 2;
 
 				var img = document.createElement("img");
@@ -702,8 +712,7 @@
 					return parseInt(getComputedStyle(element).getPropertyValue("margin-top").split("px")[0]);
 				}
 
-				function getHeight(element)
-				{
+				function getHeight(element)				{
 					return parseInt(getComputedStyle(element).getPropertyValue("height").split("px")[0]);
 				}
 
@@ -728,15 +737,13 @@
 							var fatality = document.createElement("img");
 							fatality.src = "assets/img/fatalityText.png";
 							fatality.className = "fatalityImg";
-							fatality.style.left = getMarginLeft(allSquares) + 90 + "px";
-							fatality.style.top = getMarginTop(allSquares) + getHeight(allSquares) / 2 + "px";
 
 							var sound = new Audio();
 							sound.src = "assets/sound/fatalitySound.wav";
 
 							setTimeout(function()
 							{
-								document.body.appendChild(fatality);
+								allSquares.appendChild(fatality);
 								sound.play();
 							}, 200);
 
@@ -759,8 +766,11 @@
 								setTimeout(function()
 								{
 									allSquares.removeChild(disapear);
-									document.body.removeChild(fatality);
-									moving = 0;
+									allSquares.removeChild(fatality);
+									if (opponent != 1)
+									{
+										moving = 0;
+									}
 								}, 2000);
 							}, 400);
 						}, 650);
@@ -801,4 +811,4 @@ function addListeners()
 }
 
 document.addEventListener("DOMContentLoaded", prepareGame);
-})();
+})();	

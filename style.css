@@ -247,6 +247,7 @@ html, body
 .fatalityImg
 {
     position: absolute;
-    top: 50px;
-    left: 0px;
+    top: 120px;
+    left: -100px;
+    display: block;
 }

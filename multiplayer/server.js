@@ -112,6 +112,7 @@ io.on("connection", function(socket)
 			clients[socket.clientNbr] = socket;
 			
 			socket.emit("malus", biggest);
+			clients[socket.opponent].emit("malus", biggest, 1);
 		}
 	}
 
