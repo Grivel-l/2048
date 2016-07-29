@@ -702,6 +702,11 @@
 					return parseInt(getComputedStyle(element).getPropertyValue("margin-top").split("px")[0]);
 				}
 
+				function getHeight(element)
+				{
+					return parseInt(getComputedStyle(element).getPropertyValue("height").split("px")[0]);
+				}
+
 				setTimeout(function()
 				{
 					element.style.transition = "0.27s ease-in-out all";
@@ -720,6 +725,21 @@
 							element.style.marginLeft = getMarginLeft(element) - 50 + "px";
 							element.style.marginTop = getMarginTop(element) - 150 + "px";
 
+							var fatality = document.createElement("img");
+							fatality.src = "assets/img/fatalityText.png";
+							fatality.className = "fatalityImg";
+							fatality.style.left = getMarginLeft(allSquares) + 90 + "px";
+							fatality.style.top = getMarginTop(allSquares) + getHeight(allSquares) / 2 + "px";
+
+							var sound = new Audio();
+							sound.src = "assets/sound/fatalitySound.wav";
+
+							setTimeout(function()
+							{
+								document.body.appendChild(fatality);
+								sound.play();
+							}, 200);
+
 							setTimeout(function()
 							{
 								var disapear = document.createElement("img");
@@ -732,12 +752,14 @@
 								disapear.style.zIndex = 2;
 
 								allSquares.appendChild(disapear);
+
 								allSquares.removeChild(img);
 								allSquares.removeChild(element);
 
 								setTimeout(function()
 								{
 									allSquares.removeChild(disapear);
+									document.body.removeChild(fatality);
 									moving = 0;
 								}, 2000);
 							}, 400);

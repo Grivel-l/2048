@@ -243,3 +243,10 @@ html, body
 {
     background-color: #7e37b5;
 }
+
+.fatalityImg
+{
+    position: absolute;
+    top: 50px;
+    left: 0px;
+}
